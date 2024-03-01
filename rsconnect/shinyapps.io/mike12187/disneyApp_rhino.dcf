@@ -1,0 +1,12 @@
+name: disneyApp_rhino
+title: disneyApp_rhino
+username: mike12187
+account: mike12187
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 11375840
+bundleId: 8316359
+url: https://mike12187.shinyapps.io/disneyApp_rhino/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
