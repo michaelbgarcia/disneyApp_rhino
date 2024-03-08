@@ -1,7 +1,7 @@
 # app/view/table.R
 
 box::use(
-  shiny[NS, moduleServer],
+  shiny[NS, moduleServer, reactive, actionButton, icon, req],
   reactable[reactable, reactableOutput, renderReactable, colDef],
   reactablefmtr[fivethirtyeight, merge_column, pill_buttons]
 )
@@ -15,6 +15,8 @@ ui <- function(id){
 #' @export
 server <- function(id, data){
   moduleServer(id, function(input, output, session){
+    ns <- session$ns
+
     output$table <- renderReactable({
       reactable::reactable(
         data = data(),
@@ -24,9 +26,23 @@ server <- function(id, data){
         highlight = TRUE,
         compact = TRUE,
         selection = "single",
-        onClick = "select",
-        defaultSelected = 1,
+        onClick = "expand",
+        # defaultSelected = 1,
         columns = list(
+          Details =
+            colDef(
+              cell = function(value, index) {
+                actionButton(inputId = ns(paste("btn", index, sep = "_")),
+                             label = "",
+                             icon = icon("exclamation"),
+                             onclick = sprintf(
+                               "Shiny.setInputValue('%s', '%s');",
+                               ns("selectedValue"),
+                               value
+                             )
+                )
+              },
+              html = TRUE),
           id = colDef(show = FALSE),
           parks_name = colDef(show = FALSE),
           latitude = colDef(show = FALSE),
@@ -57,5 +73,10 @@ server <- function(id, data){
       )
     })
 
+
+    return(reactive({
+      req(input$selectedValue)
+      input$selectedValue
+    }))
   })
 }
