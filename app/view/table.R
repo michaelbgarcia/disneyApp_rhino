@@ -1,7 +1,7 @@
 # app/view/table.R
 
 box::use(
-  shiny[NS, moduleServer, reactive, actionButton, icon, req],
+  shiny[NS, moduleServer, reactive, reactiveValues, actionButton, icon, req, observe],
   reactable[reactable, reactableOutput, renderReactable, colDef],
   reactablefmtr[fivethirtyeight, merge_column, pill_buttons]
 )
@@ -16,6 +16,18 @@ ui <- function(id){
 server <- function(id, data){
   moduleServer(id, function(input, output, session){
     ns <- session$ns
+    myreac <- reactiveValues(data = NULL,
+                             data_cols = NULL,
+                             table_select = NULL)
+
+    observe({
+      myreac$data <- data()
+      myreac$data_cols <- colnames(data())
+    })
+
+    observe({
+      myreac$table_select <- input$selectedValue
+    })
 
     output$table <- renderReactable({
       reactable::reactable(
@@ -73,10 +85,10 @@ server <- function(id, data){
       )
     })
 
-
-    return(reactive({
-      req(input$selectedValue)
-      input$selectedValue
-    }))
+    return(myreac)
+    # return(reactive({
+    #   req(input$selectedValue)
+    #   input$selectedValue
+    # }))
   })
 }

@@ -6,6 +6,7 @@ box::use(
   bslib[page_sidebar, sidebar, card, card_header],
   dplyr[filter, mutate],
   readr[read_rds],
+  purrr,
 )
 
 box::use(
@@ -71,12 +72,14 @@ server <- function(id) {
       bindEvent(input$park_select)
 
     map$server("map", data = live_data_park)
+    # modalVal = table$server("table", data = live_data_park)
     modalVal = table$server("table", data = live_data_park)
+
 
     observe({
       showModal(modalDialog(
         title = "Modal Title",
-        paste("You clicked on:", modalVal())
+        paste("You clicked on:", modalVal$table_select)
       ))
     })
 
