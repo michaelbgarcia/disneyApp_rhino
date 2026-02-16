@@ -2,7 +2,7 @@
 
 box::use(
   shiny[reactive, observe, selectInput, updateSelectInput, bindEvent, moduleServer, NS, req],
-  bslib[page_sidebar, sidebar, card, card_header],
+  bslib[accordion, accordion_panel, page_sidebar, sidebar, card, card_header],
   dplyr[filter],
   readr[read_rds]
 )
@@ -19,7 +19,9 @@ ui <- function(id) {
   page_sidebar(
     title = "Disney World Wait Times",
     sidebar = sidebar(
-      selectInput(ns("park_select"), "Select Park", choices = NULL)
+      accordion(
+        accordion_panel("Park", selectInput(ns("park_select"), "Select Park", choices = NULL))
+      ),
     ),
     card(
       card_header("Ride Detail"),
@@ -56,3 +58,4 @@ server <- function(id) {
     table$server("table", data = live_data_park)
   })
 }
+
